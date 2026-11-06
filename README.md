@@ -54,20 +54,14 @@
 在 DSH 的插件安装界面输入：
 
 ```text
-github:Skyler-Huang/dsh-plugin-naiwa-pet
+github:Skyler-Huang/dsh-plugin-naiwa-pet#v0.1.0
 ```
 
-也可以克隆仓库后，把其中的 `dsh-plugin-naiwa-pet` 目录作为本地 bundle 安装。
+想跟随最新提交，可以省略 `#v0.1.0`。也可以克隆仓库，直接把**仓库根目录**（含 `package.json` 的那一层）作为本地 bundle 安装。
 
-### 本机源码
+### 本地 bundle
 
-当前工作区里的插件目录：
-
-```text
-D:\plugin\dsh-naiwa-pet
-```
-
-在 DSH 里通过插件管理器安装本地 bundle，或在设置 → 插件里选择这个目录。安装后如果页面已经打开，刷新一次页面让新的 Client 模块生效。
+在 DSH 里通过插件管理器安装本地 bundle，或在设置 → 插件里选择仓库根目录。安装后如果页面已经打开，刷新一次页面让新的 Client 模块生效。
 
 安装后可以在 `shell.overlay` 中看到 `naiwa-pet`（order 88），与已有的 `whale-pet` 并存。
 
@@ -76,7 +70,7 @@ D:\plugin\dsh-naiwa-pet
 - **页面里没出现**：如果页面是在安装前打开的，刷新一次；仍然没有就确认插件已启用，或重启 DSH。
 - **和鲸鱼桌宠重叠**：默认位置在鲸鱼左侧；直接把奶蛙拖开，位置会记住。
 - **位置跑到屏幕外**：右键 → 归位。
-- **想暂时收起来**：右键 → 收起；右下角会出现「唤回奶蛙」。
+- **想暂时收起来**：右键 → 收起；窗口右下区域会出现「唤回奶蛙」胶囊。
 - **完全停用**：在 DSH 设置 → 插件里停用 `dsh-plugin-naiwa-pet`。
 
 ## 开发
