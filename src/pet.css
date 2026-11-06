@@ -1,0 +1,725 @@
+.naiwa-root {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  font-family: var(--dsw-font-family, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
+  color: var(--dsw-alias-label-primary, #1b1a15);
+  --naiwa-ink: var(--dsw-alias-label-primary, #1b1a15);
+  --naiwa-muted: var(--dsw-alias-label-secondary, #6c6658);
+  --naiwa-surface: var(--dsw-alias-bg-overlay, #fffaf0);
+  --naiwa-border: var(--dsw-alias-border-l2, rgba(30, 25, 10, 0.14));
+  --naiwa-warm: #e5a62d;
+  --naiwa-warm-soft: color-mix(in srgb, var(--naiwa-warm) 14%, transparent);
+  --naiwa-panel-shadow: 0 24px 64px color-mix(in srgb, var(--naiwa-ink) 22%, transparent),
+    0 2px 8px color-mix(in srgb, var(--naiwa-ink) 10%, transparent);
+  --naiwa-font: var(--dsw-font-family, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
+}
+.naiwa-root *,
+.naiwa-root *::before,
+.naiwa-root *::after { box-sizing: border-box; }
+.naiwa-root button { font: inherit; color: inherit; }
+.naiwa-root button:focus-visible {
+  outline: 2px solid var(--dsw-alias-brand-primary, #2f6fed);
+  outline-offset: 2px;
+}
+
+/* ---------- Pet body ---------- */
+.naiwa-pet {
+  position: fixed;
+  pointer-events: none;
+  will-change: left, top;
+  filter: none;
+}
+.naiwa-stage {
+  position: absolute;
+  inset: 0;
+}
+.naiwa-breathe {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 94%;
+  animation: naiwa-breathe 3.8s ease-in-out infinite;
+}
+.naiwa-tilt {
+  position: absolute;
+  inset: 0;
+  transform: rotate(calc(var(--look, 0) * 1.7deg));
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-origin: 50% 88%;
+}
+.naiwa-art,
+.naiwa-art > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.naiwa-art > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 10px 9px color-mix(in srgb, var(--naiwa-ink) 20%, transparent))
+    drop-shadow(0 2px 2px color-mix(in srgb, var(--naiwa-ink) 14%, transparent));
+}
+.naiwa-art > svg { overflow: visible; pointer-events: none; }
+.naiwa-face { z-index: 2; }
+.naiwa-accessory {
+  z-index: 3;
+  filter: drop-shadow(0 2px 2px color-mix(in srgb, var(--naiwa-ink) 18%, transparent));
+}
+.naiwa-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 46% 46% 42% 42%;
+  background: transparent;
+  cursor: grab;
+  pointer-events: auto;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.naiwa-hit:active { cursor: grabbing; }
+.naiwa-hit:focus-visible { outline-offset: 6px; }
+.naiwa-pet[data-dragging="true"] .naiwa-breathe {
+  animation: none;
+  transform: scale(1.035) rotate(1.4deg);
+  transition: transform 0.18s ease;
+}
+.naiwa-pet[data-dragging="true"] .naiwa-shadow {
+  transform: scaleX(0.78);
+  opacity: 0.3;
+}
+.naiwa-shadow {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  bottom: 1.5%;
+  height: 4.4%;
+  border-radius: 50%;
+  z-index: 0;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--naiwa-ink) 34%, transparent) 0%,
+    color-mix(in srgb, var(--naiwa-ink) 12%, transparent) 46%,
+    transparent 74%
+  );
+  filter: blur(2px);
+  opacity: 0.55;
+  transform: scaleX(1);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* ---------- Mood motion ---------- */
+.naiwa-pet[data-mood="working"] .naiwa-breathe { animation-duration: 1.65s; }
+.naiwa-pet[data-mood="working"] .naiwa-art > img {
+  filter: drop-shadow(0 10px 9px color-mix(in srgb, var(--naiwa-ink) 20%, transparent))
+    drop-shadow(0 0 14px color-mix(in srgb, #5b9dff 32%, transparent));
+}
+.naiwa-pet[data-mood="waiting"] .naiwa-breathe {
+  animation: naiwa-wiggle 2.1s ease-in-out infinite;
+}
+.naiwa-pet[data-mood="sleeping"] .naiwa-breathe { animation-duration: 6.2s; }
+.naiwa-pet[data-mood="happy"] .naiwa-breathe {
+  animation: naiwa-hop 0.52s cubic-bezier(0.3, 0.9, 0.4, 1) 4;
+}
+.naiwa-pet[data-mood="celebrate"] .naiwa-breathe {
+  animation: naiwa-jump 0.62s cubic-bezier(0.3, 0.9, 0.4, 1) 6;
+}
+.naiwa-pet[data-mood="eating"] .naiwa-breathe {
+  animation: naiwa-nom 0.4s ease-in-out 8;
+}
+.naiwa-pet[data-mood="sleeping"] .naiwa-art > img {
+  filter: saturate(0.88) brightness(0.97)
+    drop-shadow(0 10px 9px color-mix(in srgb, var(--naiwa-ink) 20%, transparent));
+}
+
+@keyframes naiwa-breathe {
+  0%, 100% { transform: translateY(0) scale(1, 1); }
+  50% { transform: translateY(-1.6px) scale(1.006, 1.012); }
+}
+@keyframes naiwa-wiggle {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  25% { transform: rotate(-0.8deg) translateY(-1px); }
+  70% { transform: rotate(0.8deg) translateY(0); }
+}
+@keyframes naiwa-hop {
+  0%, 100% { transform: translateY(0) scale(1); }
+  38% { transform: translateY(-13px) scale(1.012, 0.988); }
+  70% { transform: translateY(0) scale(0.992, 1.012); }
+}
+@keyframes naiwa-jump {
+  0%, 100% { transform: translateY(0) scale(1) rotate(0); }
+  34% { transform: translateY(-24px) scale(1.018, 0.982) rotate(-1.4deg); }
+  62% { transform: translateY(-5px) scale(0.99, 1.02) rotate(1.2deg); }
+  82% { transform: translateY(0) scale(0.985, 1.018); }
+}
+@keyframes naiwa-nom {
+  0%, 100% { transform: translateY(0) scale(1); }
+  45% { transform: translateY(2px) scale(1.02, 0.975); }
+}
+
+/* ---------- Speech bubble ---------- */
+.naiwa-bubble {
+  position: absolute;
+  top: 4%;
+  right: calc(100% - 4px);
+  z-index: 7;
+  width: max-content;
+  max-width: 196px;
+  padding: 9px 12px;
+  border: 1px solid var(--naiwa-border);
+  border-radius: 15px;
+  background: var(--naiwa-surface);
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--naiwa-ink) 17%, transparent);
+  color: var(--naiwa-ink);
+  font-size: 12.5px;
+  font-weight: 520;
+  line-height: 1.45;
+  letter-spacing: 0.005em;
+  opacity: 0;
+  transform: translateY(4px) scale(0.96);
+  transform-origin: 100% 18px;
+  transition: opacity 0.16s ease, transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+}
+.naiwa-bubble[data-side="right"] {
+  right: auto;
+  left: calc(100% - 4px);
+  transform-origin: 0 18px;
+}
+.naiwa-bubble[data-show="true"] { opacity: 1; transform: translateY(0) scale(1); }
+.naiwa-bubble::after {
+  content: "";
+  position: absolute;
+  top: 16px;
+  right: -5px;
+  width: 9px;
+  height: 9px;
+  border-top: 1px solid var(--naiwa-border);
+  border-right: 1px solid var(--naiwa-border);
+  border-radius: 1px;
+  background: var(--naiwa-surface);
+  transform: rotate(45deg);
+}
+.naiwa-bubble[data-side="right"]::after {
+  right: auto;
+  left: -5px;
+  border-top: 0;
+  border-right: 0;
+  border-left: 1px solid var(--naiwa-border);
+  border-bottom: 1px solid var(--naiwa-border);
+}
+.naiwa-bubble-inner { display: flex; align-items: flex-start; gap: 7px; }
+.naiwa-bubble-dot {
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: var(--dsw-alias-state-idle-primary, #9a9382);
+}
+.naiwa-bubble[data-mood="working"] .naiwa-bubble-dot { background: #4f8ff7; box-shadow: 0 0 0 3px #4f8ff72e; }
+.naiwa-bubble[data-mood="waiting"] .naiwa-bubble-dot { background: #e59a20; box-shadow: 0 0 0 3px #e59a202e; }
+.naiwa-bubble[data-mood="celebrate"] .naiwa-bubble-dot { background: #39a96b; box-shadow: 0 0 0 3px #39a96b2e; }
+.naiwa-bubble[data-mood="sleeping"] .naiwa-bubble-dot { background: #7f8dc4; }
+.naiwa-bubble[data-mood="happy"] .naiwa-bubble-dot,
+.naiwa-bubble[data-mood="eating"] .naiwa-bubble-dot { background: #ef7f95; }
+.naiwa-dots { display: inline-flex; gap: 3px; margin-left: 3px; vertical-align: baseline; }
+.naiwa-dots i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.4;
+  animation: naiwa-dot 1.05s ease-in-out infinite;
+}
+.naiwa-dots i:nth-child(2) { animation-delay: 0.14s; }
+.naiwa-dots i:nth-child(3) { animation-delay: 0.28s; }
+@keyframes naiwa-dot {
+  0%, 100% { opacity: 0.28; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-2px); }
+}
+
+/* ---------- Status badge ---------- */
+.naiwa-badge {
+  position: absolute;
+  top: 8.5%;
+  right: 8%;
+  z-index: 8;
+  min-width: 23px;
+  height: 23px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: #fff;
+  font-family: var(--naiwa-font);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1;
+  box-shadow: 0 3px 10px rgba(20, 15, 0, 0.24), 0 0 0 2px color-mix(in srgb, var(--naiwa-surface) 72%, transparent);
+  pointer-events: none;
+}
+.naiwa-badge[data-kind="working"] { background: #4f8ff7; }
+.naiwa-badge[data-kind="waiting"] { background: #e59a20; }
+.naiwa-badge[data-kind="done"] { background: #39a96b; }
+.naiwa-badge[data-kind="sleep"] { background: #7f8dc4; }
+.naiwa-typing { display: inline-flex; align-items: center; gap: 2px; }
+.naiwa-typing i {
+  display: block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #fff;
+  animation: naiwa-typing 0.9s ease-in-out infinite;
+}
+.naiwa-typing i:nth-child(2) { animation-delay: 0.12s; }
+.naiwa-typing i:nth-child(3) { animation-delay: 0.24s; }
+@keyframes naiwa-typing {
+  0%, 100% { opacity: 0.35; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-2px); }
+}
+
+/* ---------- Zzz ---------- */
+.naiwa-zzz {
+  position: absolute;
+  top: 2%;
+  right: 1%;
+  z-index: 6;
+  width: 64px;
+  height: 64px;
+  pointer-events: none;
+}
+.naiwa-zzz span {
+  position: absolute;
+  color: color-mix(in srgb, var(--naiwa-ink) 64%, transparent);
+  font-family: var(--naiwa-font);
+  font-weight: 750;
+  line-height: 1;
+  animation: naiwa-zzz 3s ease-out infinite;
+}
+.naiwa-zzz span:nth-child(1) { left: 14px; top: 34px; font-size: 12px; animation-delay: 0s; }
+.naiwa-zzz span:nth-child(2) { left: 25px; top: 22px; font-size: 16px; animation-delay: 0.7s; }
+.naiwa-zzz span:nth-child(3) { left: 38px; top: 8px; font-size: 21px; animation-delay: 1.4s; }
+@keyframes naiwa-zzz {
+  0% { opacity: 0; transform: translate(0, 4px) scale(0.8) rotate(-6deg); }
+  18% { opacity: 0.8; }
+  70% { opacity: 0.35; }
+  100% { opacity: 0; transform: translate(9px, -18px) scale(1.08) rotate(6deg); }
+}
+
+/* ---------- Particles ---------- */
+.naiwa-burst {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  overflow: visible;
+  pointer-events: none;
+}
+.naiwa-particle {
+  position: absolute;
+  left: calc(50% + var(--x, 0px));
+  bottom: 34%;
+  opacity: 0;
+  animation: naiwa-float 1.55s cubic-bezier(0.15, 0.7, 0.3, 1) forwards;
+  animation-delay: var(--delay, 0s);
+  will-change: transform, opacity;
+}
+.naiwa-particle[data-kind="heart"] {
+  color: #ef738c;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 17px;
+  text-shadow: 0 2px 5px rgba(180, 40, 70, 0.2);
+}
+.naiwa-particle[data-kind="spark"] {
+  color: var(--naiwa-warm);
+  font-size: 15px;
+  text-shadow: 0 0 8px color-mix(in srgb, var(--naiwa-warm) 50%, transparent);
+}
+.naiwa-particle[data-kind="crumb"] {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #c98b3e;
+  box-shadow: 0 0 0 1px #a86f2b inset;
+}
+.naiwa-particle[data-kind="confetti"] {
+  width: 7px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--c, #e5a62d);
+  animation-name: naiwa-confetti;
+  animation-duration: 1.85s;
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1);
+}
+@keyframes naiwa-float {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.55) rotate(0); }
+  16% { opacity: 1; }
+  74% { opacity: 0.9; }
+  100% { opacity: 0; transform: translate(var(--drift, 0px), -96px) scale(1.08) rotate(var(--rot, 0deg)); }
+}
+@keyframes naiwa-confetti {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.6) rotate(0); }
+  12% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--drift, 0px), 88px) scale(0.95) rotate(var(--rot, 240deg)); }
+}
+
+/* ---------- Menu ---------- */
+.naiwa-panel {
+  position: fixed;
+  z-index: 82;
+  width: min(312px, calc(100vw - 24px));
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 14px;
+  border: 1px solid var(--naiwa-border);
+  border-radius: 20px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--dsw-alias-state-warn-primary, #e5a62d) 9%, var(--naiwa-surface)) 0,
+      var(--naiwa-surface) 96px
+    );
+  box-shadow: var(--naiwa-panel-shadow);
+  backdrop-filter: blur(26px) saturate(1.35);
+  color: var(--naiwa-ink);
+  font-family: var(--naiwa-font);
+  font-size: 12px;
+  opacity: 1;
+  animation: naiwa-panel-in 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: auto;
+}
+@keyframes naiwa-panel-in {
+  from { opacity: 0; transform: translateY(5px) scale(0.975); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.naiwa-panel::-webkit-scrollbar { width: 6px; }
+.naiwa-panel::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--naiwa-ink) 18%, transparent);
+  border-radius: 999px;
+}
+.naiwa-head { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.naiwa-avatar {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border: 1px solid color-mix(in srgb, var(--naiwa-warm) 42%, var(--naiwa-border));
+  border-radius: 50%;
+  background-color: #ffedbd;
+  background-image: var(--naiwa-avatar);
+  background-size: 280% auto;
+  background-position: 40% 7%;
+  background-repeat: no-repeat;
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, #fff 50%, transparent);
+}
+.naiwa-head-text { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.naiwa-title {
+  font-size: 13.5px;
+  font-weight: 680;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.naiwa-subtitle {
+  font-size: 10.8px;
+  color: var(--naiwa-muted);
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.naiwa-close {
+  flex: 0 0 auto;
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--naiwa-muted);
+  cursor: pointer;
+}
+.naiwa-close:hover {
+  background: color-mix(in srgb, var(--naiwa-ink) 7%, transparent);
+  color: var(--naiwa-ink);
+}
+.naiwa-now {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--naiwa-border) 70%, transparent);
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--naiwa-ink) 3.5%, transparent);
+  color: var(--naiwa-muted);
+  font-size: 11.2px;
+  line-height: 1.35;
+}
+.naiwa-now-dot {
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--dsw-alias-state-idle-primary, #9a9382);
+}
+.naiwa-now[data-mood="working"] .naiwa-now-dot { background: #4f8ff7; box-shadow: 0 0 0 3px #4f8ff72e; }
+.naiwa-now[data-mood="waiting"] .naiwa-now-dot { background: #e59a20; box-shadow: 0 0 0 3px #e59a202e; }
+.naiwa-now[data-mood="celebrate"] .naiwa-now-dot { background: #39a96b; box-shadow: 0 0 0 3px #39a96b2e; }
+.naiwa-now[data-mood="sleeping"] .naiwa-now-dot { background: #7f8dc4; }
+.naiwa-now[data-mood="happy"] .naiwa-now-dot,
+.naiwa-now[data-mood="eating"] .naiwa-now-dot { background: #ef7f95; box-shadow: 0 0 0 3px #ef7f952e; }
+.naiwa-section { margin-top: 13px; }
+.naiwa-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+  color: var(--naiwa-muted);
+  font-size: 10.4px;
+  font-weight: 650;
+  letter-spacing: 0.055em;
+  line-height: 1.2;
+}
+.naiwa-skins {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.naiwa-skin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
+  height: 58px;
+  padding: 6px 3px 5px;
+  border: 1px solid var(--naiwa-border);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--naiwa-ink) 2.2%, transparent);
+  color: var(--naiwa-muted);
+  cursor: pointer;
+  transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+}
+.naiwa-skin:hover {
+  background: color-mix(in srgb, var(--naiwa-ink) 6%, transparent);
+  color: var(--naiwa-ink);
+}
+.naiwa-skin[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--naiwa-warm) 72%, var(--naiwa-border));
+  background: var(--naiwa-warm-soft);
+  color: var(--naiwa-ink);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--naiwa-warm) 42%, transparent);
+}
+.naiwa-skin svg { width: 21px; height: 21px; }
+.naiwa-skin span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10.7px;
+  line-height: 1.2;
+}
+.naiwa-seg {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3px;
+  padding: 3px;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--naiwa-ink) 5.5%, transparent);
+}
+.naiwa-seg button {
+  height: 28px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--naiwa-muted);
+  font-size: 11.3px;
+  cursor: pointer;
+}
+.naiwa-seg button:hover { color: var(--naiwa-ink); }
+.naiwa-seg button[aria-pressed="true"] {
+  background: var(--naiwa-surface);
+  color: var(--naiwa-ink);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--naiwa-ink) 15%, transparent);
+}
+.naiwa-toggles { display: flex; flex-direction: column; gap: 2px; }
+.naiwa-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 32px;
+  padding: 2px 1px;
+  color: var(--naiwa-ink);
+  font-size: 11.8px;
+}
+.naiwa-switch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 21px;
+  padding: 0;
+  border: 1px solid var(--naiwa-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--naiwa-ink) 8%, transparent);
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease;
+}
+.naiwa-switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--naiwa-surface);
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--naiwa-ink) 28%, transparent);
+  transition: transform 0.17s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.naiwa-switch[aria-checked="true"] {
+  border-color: transparent;
+  background: var(--naiwa-warm);
+}
+.naiwa-switch[aria-checked="true"]::after { transform: translateX(15px); }
+.naiwa-feed {
+  width: 100%;
+  height: 37px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 11px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--naiwa-warm) 92%, #fff) 0, var(--naiwa-warm) 100%);
+  color: #2b1c04;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--naiwa-warm) 26%, transparent);
+}
+.naiwa-feed:hover { filter: brightness(0.97); }
+.naiwa-feed:active { transform: translateY(1px); }
+.naiwa-links { display: flex; gap: 6px; margin-top: 7px; }
+.naiwa-link {
+  flex: 1 1 0;
+  height: 30px;
+  border: 1px solid var(--naiwa-border);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--naiwa-muted);
+  font-size: 11.2px;
+  cursor: pointer;
+}
+.naiwa-link:hover {
+  background: color-mix(in srgb, var(--naiwa-ink) 6%, transparent);
+  color: var(--naiwa-ink);
+}
+.naiwa-link[data-danger="true"]:hover {
+  border-color: color-mix(in srgb, var(--dsw-alias-state-error-primary, #d64545) 45%, var(--naiwa-border));
+  color: var(--dsw-alias-state-error-primary, #d64545);
+}
+
+/* ---------- Hidden restore pill ---------- */
+.naiwa-restore {
+  position: fixed;
+  right: 206px;
+  bottom: 88px;
+  z-index: 78;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 13px 5px 6px;
+  border: 1px solid var(--naiwa-border);
+  border-radius: 999px;
+  background: var(--naiwa-surface);
+  box-shadow: var(--naiwa-panel-shadow);
+  color: var(--naiwa-ink);
+  font-family: var(--naiwa-font);
+  font-size: 11.6px;
+  font-weight: 550;
+  cursor: pointer;
+  pointer-events: auto;
+  animation: naiwa-restore-in 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.naiwa-restore:hover { background: color-mix(in srgb, var(--naiwa-warm) 9%, var(--naiwa-surface)); }
+@keyframes naiwa-restore-in {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.naiwa-restore-avatar {
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background-color: #ffedbd;
+  background-image: var(--naiwa-avatar);
+  background-size: 280% auto;
+  background-position: 40% 7%;
+  background-repeat: no-repeat;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--naiwa-warm) 35%, transparent);
+}
+.naiwa-restore-dot {
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: #4f8ff7;
+  box-shadow: 0 0 0 3px #4f8ff72e;
+}
+
+/* ---------- Motion preferences ---------- */
+.naiwa-root[data-motion="false"] .naiwa-breathe,
+.naiwa-root[data-motion="false"] .naiwa-badge,
+.naiwa-root[data-motion="false"] .naiwa-zzz span,
+.naiwa-root[data-motion="false"] .naiwa-particle,
+.naiwa-root[data-motion="false"] .naiwa-dots i,
+.naiwa-root[data-motion="false"] .naiwa-typing i {
+  animation: none !important;
+}
+.naiwa-root[data-motion="false"] .naiwa-particle { display: none; }
+.naiwa-root[data-motion="false"] .naiwa-tilt,
+.naiwa-root[data-motion="false"] .naiwa-shadow { transition: none; }
+.naiwa-root[data-motion="false"] .naiwa-bubble,
+.naiwa-root[data-motion="false"] .naiwa-panel,
+.naiwa-root[data-motion="false"] .naiwa-restore { animation: none; transition: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .naiwa-root .naiwa-breathe,
+  .naiwa-root .naiwa-badge,
+  .naiwa-root .naiwa-zzz span,
+  .naiwa-root .naiwa-particle,
+  .naiwa-root .naiwa-dots i,
+  .naiwa-root .naiwa-typing i { animation: none !important; }
+  .naiwa-root .naiwa-particle { display: none; }
+  .naiwa-root .naiwa-tilt { transition: none; }
+}
+
+@media (max-width: 680px) {
+  .naiwa-bubble { max-width: 148px; font-size: 11.6px; padding: 8px 10px; }
+  .naiwa-panel { padding: 12px; border-radius: 17px; }
+  .naiwa-avatar { width: 39px; height: 39px; }
+  .naiwa-title { font-size: 12.8px; }
+}
+
+@media (max-width: 540px) {
+  .naiwa-restore { right: 16px; bottom: 258px; }
+}

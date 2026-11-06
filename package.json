@@ -1,0 +1,40 @@
+{
+  "name": "dsh-plugin-naiwa-pet",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A little Naiwa desk pet inside DeepSeek Harness: dress-up, pokes, session-aware moods, and a nap when you are idle.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Skyler-Huang/dsh-plugin-naiwa-pet.git"
+  },
+  "homepage": "https://github.com/Skyler-Huang/dsh-plugin-naiwa-pet",
+  "bugs": { "url": "https://github.com/Skyler-Huang/dsh-plugin-naiwa-pet/issues" },
+  "icon": "./assets/icon.png",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./assets/icon.png",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "assets/icon.png",
+    "assets/naiwa.webp",
+    "README.md",
+    "LICENSE",
+    "ASSETS-LICENSE.md"
+  ],
+  "dsh": {
+    "bundle": { "patch": "./cordis.patch.yml" },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": ["@deepseek-ai/dsh-client-ui-conversation"]
+    }
+  }
+}
